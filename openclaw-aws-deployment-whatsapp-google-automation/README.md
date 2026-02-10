@@ -1,4 +1,4 @@
-# Steps: OpenClaw
+# Steps: Deploy OpenClaw on AWS
 
 https://github.com/aws-samples/sample-OpenClaw-on-AWS-with-Bedrock?tab=readme-ov-file
 
