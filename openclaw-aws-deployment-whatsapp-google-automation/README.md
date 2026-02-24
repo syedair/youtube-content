@@ -1,185 +1,268 @@
-# Steps: Deploy OpenClaw on AWS
+# Deploy OpenClaw on AWS with Google & WhatsApp Automation
 
-https://github.com/aws-samples/sample-OpenClaw-on-AWS-with-Bedrock?tab=readme-ov-file
+Reference repository: https://github.com/aws-samples/sample-OpenClaw-on-AWS-with-Bedrock?tab=readme-ov-file
 
-1. Create EC-Keypair for SSH
-2. Run the CloudFormation template in your AWS Account in your desired location.
-3. Install Session manager Plugin:
+---
+
+## Step 1: Create EC2 Key Pair
+
+Create an EC2 key pair for SSH access in your AWS Console.
+
+---
+
+## Step 2: Deploy CloudFormation Template
+
+Run the CloudFormation template in your AWS account in your desired region.
+
+---
+
+## Step 3: Install AWS Session Manager Plugin
+
+**macOS (Apple Silicon):**
 
 ```bash
-#For MAC - apple silicon:
 curl "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/mac_arm64/session-manager-plugin.pkg" -o "session-manager-plugin.pkg"
-```
-
-1. Run the install commands. If the command fails, verify that the`/usr/local/bin` folder exists. If it doesn't, create it and run the command again.
-
-```bash
 sudo installer -pkg session-manager-plugin.pkg -target /
 sudo ln -s /usr/local/sessionmanagerplugin/bin/session-manager-plugin /usr/local/bin/session-manager-plugin
 ```
 
-https://docs.aws.amazon.com/systems-manager/latest/userguide/install-plugin-macos-overview.html
+> If the install command fails, verify that `/usr/local/bin` exists. If it doesn't, create it and re-run.
 
-1. Connect to the EC2 Instance:
+**macOS (Intel):**
 
-    ```bash
-    aws ssm start-session --target <your-instance-id> --region eu-west-1
-    ```
+```bash
+curl "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/mac/sessionmanagerplugin.pkg" -o "session-manager-plugin.pkg"
+sudo installer -pkg session-manager-plugin.pkg -target /
+sudo ln -s /usr/local/sessionmanagerplugin/bin/session-manager-plugin /usr/local/bin/session-manager-plugin
+```
 
+**Linux (64-bit):**
 
-1. Switch to ubuntu user:
+```bash
+curl "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/ubuntu_64bit/session-manager-plugin.deb" -o "session-manager-plugin.deb"
+sudo dpkg -i session-manager-plugin.deb
+```
 
-    ```bash
-    sudo su ubuntu
-    ```
+**Windows:** Download and run the installer from the [AWS documentation](https://docs.aws.amazon.com/systems-manager/latest/userguide/install-plugin-windows.html).
 
+Full reference: https://docs.aws.amazon.com/systems-manager/latest/userguide/install-plugin-macos-overview.html
 
-1. Install Kiro, you CLI Helper (https://kiro.dev/downloads/)
+---
+
+## Step 4: Connect to the EC2 Instance
+
+```bash
+aws ssm start-session --target <your-instance-id> --region eu-west-1
+```
+
+---
+
+## Step 5: Switch to Ubuntu User
+
+```bash
+sudo su ubuntu
+```
+
+---
+
+## Step 6: Install Kiro CLI
+
+Reference: https://kiro.dev/downloads/
 
 ```bash
 curl -fsSL https://cli.kiro.dev/install | bash
 ```
 
-1. Add kiro-cli to the path:
+Add Kiro CLI to your PATH:
 
-    ```bash
-    echo 'export PATH="$PATH:/home/ubuntu/.local/bin"' >> ~/.bashrc
-    source ~/.bashrc
-    ```
+```bash
+echo 'export PATH="$PATH:/home/ubuntu/.local/bin"' >> ~/.bashrc
+source ~/.bashrc
+```
 
+---
 
-1. Authenticate kiro with your AWS Builder Id or Google or Github Account:
+## Step 7: Authenticate Kiro CLI
 
 ```bash
 kiro-cli login --use-device-flow
 ```
 
-**For Kiro-Cli**
+---
+
+## Step 8: Set Up Port Forwarding
+
+Open **two new terminal tabs/windows on your local machine** and run each command in its own tab. Keep them running throughout the session.
+
+**Tab 1 — Kiro CLI proxy:**
 
 ```bash
-aws ssm start-session --target <your-instance-id>  --region eu-west-1 --document-name AWS-StartPortForwardingSession --parameters '{"portNumber":["3128"],"localPortNumber":["3128"]}'
+aws ssm start-session --target <your-instance-id> --region eu-west-1 \
+  --document-name AWS-StartPortForwardingSession \
+  --parameters '{"portNumber":["3128"],"localPortNumber":["3128"]}'
 ```
 
-### Installing `gog-cli`:
+**Tab 2 — OpenClaw dashboard:**
 
-Setup password for ubuntu:
+```bash
+aws ssm start-session --target <your-instance-id> --region eu-west-1 \
+  --document-name AWS-StartPortForwardingSession \
+  --parameters '{"portNumber":["18789"],"localPortNumber":["28789"]}'
+```
+
+---
+
+## Step 9: Install gog-cli
+
+Back in your EC2 session, set a password for the ubuntu user (required by Homebrew):
 
 ```bash
 sudo passwd ubuntu
 ```
 
-Install Brew:
+Install Homebrew:
 
 ```bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
+
+Add Homebrew to your PATH:
 
 ```bash
 echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> ~/.bashrc
 source ~/.bashrc
 ```
 
-**For OpenClaw**
+Install gog-cli via Homebrew:
 
 ```bash
-aws ssm start-session --target <your-instance-id>  --region eu-west-1 --document-name AWS-StartPortForwardingSession --parameters '{"portNumber":["18789"],"localPortNumber":["28789"]}'
+brew install gog-cli
 ```
 
-Run dashboard:
+---
+
+## Step 10: Open the OpenClaw Dashboard
+
+Run the dashboard:
 
 ```bash
 openclaw dashboard
 ```
 
-Copy the URL:
+Copy the URL printed in the terminal:
 
-`http://localhost:18789/?token=<token>`
+```
+http://localhost:18789/?token=<token>
+```
 
-Change the port to our local port:
+Replace the port with your local forwarded port:
 
-`http://localhost:28789/?token=<token>`
+```
+http://localhost:28789/?token=<token>
+```
 
-Go to UI:
+Open that URL in your browser and click **Install**.
 
-<click on install>
+![OpenClaw dashboard showing gog skill](image.png)
 
-![image.png](image.png)
+---
 
-## Step 6: Verify Installation
+## Step 11: Verify Installation
 
-Check `gog` is installed correctly
+Check `gog` is installed correctly:
 
 ```bash
 gog --version
 ```
 
-## Step 7: Verify OpenClaw Recognizes gog
-
-Confirm the gog skill shows as "ready"
+Confirm the gog skill shows as "ready" in OpenClaw:
 
 ```bash
 openclaw skills list | grep gog
 ```
 
-## Step 8: Get Google OAuth Credentials
+---
 
-Create OAuth 2.0 Desktop credentials from Google Cloud Console and download the JSON file
+## Step 12: Get Google OAuth Credentials
 
-Open: https://console.cloud.google.com/apis/credentials
+1. Open https://console.cloud.google.com/apis/credentials
+2. Create **OAuth 2.0 Desktop** credentials
+3. Download the JSON file and save it to `~/config.json`
+4. Under **Audience**, publish the app (required for OAuth to work)
 
-Download `config.json` to `~/`
+---
 
-Dont forget to publish the app (under Audience)
-
-## Step 9: Store OAuth Credentials
-
-Tell `gog` where your credentials file is
+## Step 13: Register OAuth Credentials with gog
 
 ```bash
 gog auth credentials ~/config.json
 ```
 
-## Step 10: Authenticate Google Account
+---
 
-Add your Google account in manual mode - it will give you a URL to open elsewhere
+## Step 14: Set Keyring Password and Authenticate Google Account
+
+Set a keyring password (used to encrypt the stored OAuth token):
+
+> **Security note:** Storing the password in `.bashrc` is convenient but keeps it as plaintext on disk. For higher security, set `GOG_KEYRING_PASSWORD` only for your current session (`export GOG_KEYRING_PASSWORD="..."`) or use a secrets manager.
 
 ```bash
 echo 'export GOG_KEYRING_PASSWORD="<your-password>"' >> ~/.bashrc
 source ~/.bashrc
 ```
 
+Add your Google account (manual mode provides a URL to open in your browser):
+
 ```bash
 gog auth add your-email@gmail.com --manual
 ```
 
-## Step 11: Set Default Account
+---
 
-Set default account to avoid repeating --account flag
+## Step 15: Set Default Account
+
+Avoid repeating `--account` on every command:
 
 ```bash
 echo 'export GOG_ACCOUNT=your-email@gmail.com' >> ~/.bashrc
 source ~/.bashrc
 ```
 
-## Step 12: Test Gmail
+---
 
-Verify authentication works
+## Step 16: Test Gmail
+
+Verify authentication works:
 
 ```bash
 gog gmail labels list
 ```
 
-## Step 13: Test Calendar
+---
 
-Verify calendar access works
+## Step 17: Test Google Calendar
+
+Verify calendar access works:
 
 ```bash
 gog calendar calendars
 ```
 
-Create environment file at `~/.openclaw/.env`:
+---
+
+## Step 18: Configure OpenClaw Environment File
+
+Create `~/.openclaw/.env` so OpenClaw can use your credentials when running automations:
 
 ```bash
 GOG_ACCOUNT=your.email@gmail.com
 GOG_KEYRING_PASSWORD=your_password
 ```
+
+---
+
+## Step 19: WhatsApp Integration
+
+> Coming soon — WhatsApp setup steps will be added here.
+
+---
