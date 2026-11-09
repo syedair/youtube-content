@@ -1,0 +1,61 @@
+diff --git a/auto_ontology/connectors/postgres.py b/auto_ontology/connectors/postgres.py
+index c78c3af2..e1810fe4 100644
+--- a/auto_ontology/connectors/postgres.py
++++ b/auto_ontology/connectors/postgres.py
+@@ -282,9 +282,13 @@ class PostgresDatabase(SQLDatabase):
+             JOIN information_schema.key_column_usage kcu
+               ON tc.constraint_name = kcu.constraint_name
+              AND tc.table_schema    = kcu.table_schema
++            -- LOCAL PATCH: match on constraint_schema, not table_schema.
++            -- ccu.table_schema is the *referenced* table's schema, so the
++            -- original join silently dropped every cross-schema FK
++            -- (e.g. sales.customers -> application.cities).
+             JOIN information_schema.constraint_column_usage ccu
+-              ON tc.constraint_name = ccu.constraint_name
+-             AND tc.table_schema    = ccu.table_schema
++              ON tc.constraint_name   = ccu.constraint_name
++             AND tc.constraint_schema = ccu.constraint_schema
+             WHERE tc.constraint_type = 'FOREIGN KEY'
+               AND tc.table_schema NOT IN ('pg_catalog', 'information_schema')
+             ORDER BY kcu.table_schema, kcu.table_name, kcu.column_name
+diff --git a/auto_ontology/utils/llm_invoke.py b/auto_ontology/utils/llm_invoke.py
+index bc1694f2..2b33a24f 100644
+--- a/auto_ontology/utils/llm_invoke.py
++++ b/auto_ontology/utils/llm_invoke.py
+@@ -224,11 +224,35 @@ def _build_client(
+     OpenAI-family models (``openai/``, ``azure/``, ``aws/`` prefixes) go through
+     ``ChatOpenAI``, which supports structured output. Everything else uses
+     ``ChatNVIDIA``.
++
++    LOCAL PATCH: ``LLM_CLIENT=openai`` routes every model through ``ChatOpenAI``.
++    The hosted build.nvidia.com endpoint now rejects ChatNVIDIA's
++    ``nvext.guided_json`` (400 "unknown field guided_json") but accepts the
++    standard OpenAI ``response_format`` json_schema. Reasoning Nemotron models
++    can also spend the whole ``max_tokens`` budget thinking (finish=length,
++    no answer), so thinking is capped at half the budget via
++    ``nvext.max_thinking_tokens``.
+     """
+-    if model.startswith(("openai/", "azure/", "aws/")):
++    is_openai_family = model.startswith(("openai/", "azure/", "aws/"))
++    if os.environ.get("LLM_CLIENT", "").lower() == "openai" or is_openai_family:
+         from langchain_openai import ChatOpenAI
+ 
++        extra: dict = {}
++        # Claude and GPT-5 / o-series reject an explicit temperature (400).
++        bare = model.lower().rsplit("/", 1)[-1]
++        rejects_temperature = (
++            "claude" in model.lower()
++            or bare.startswith(("gpt-5", "o1", "o3", "o4"))
++        )
++        if not is_openai_family and not rejects_temperature:
++            extra["temperature"] = temperature
++        if "nvidia.com" in base_url:
++            # nvext is NVIDIA-only; other OpenAI-compatible endpoints may reject it.
++            extra["extra_body"] = {
++                "nvext": {"max_thinking_tokens": max(256, max_tokens // 2)}
++            }
+         return ChatOpenAI(
++            **extra,
+             model=model,
+             api_key=api_key,
+             base_url=base_url,
