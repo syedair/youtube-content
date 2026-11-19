@@ -1,0 +1,9 @@
+subject,predicate,object
+rose-carter,a,Person
+rose-carter,name,Rose Carter
+rose-carter,birthName,Rose Lee
+rose-carter,bornIn,toronto
+rose-carter,birthDate,1931-04-03
+rose-carter,hasChild,david-carter
+david-carter,a,Person
+david-carter,hasChild,leo-carter

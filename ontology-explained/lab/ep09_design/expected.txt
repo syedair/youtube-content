@@ -1,0 +1,31 @@
+Start from questions. Each one is a SPARQL query in competency-questions.rq.
+
+== CQ1: Which employees worked on Cirrus AI engagements for healthcare customers? ==
+the ontology must name: cn:Engagement, cn:forCustomer, cn:hasLead, cn:hasReviewer, cn:industry, cn:uses
+answer:
+  Daniel Brooks
+  Emma Clarke
+
+== CQ2: Which engagements have no lead? ==
+the ontology must name: cn:Engagement, cn:hasLead
+answer:
+  Fraud Watch
+
+== CQ3: Which lab results lack a valid LOINC code? ==
+the ontology must name: cn:LabResult, cn:forPatient, cn:loincCode
+answer:
+  Fasting glucose (Patient P7)
+  Lipid panel (Patient P7)
+
+== CQ4: Who needs HIPAA training? ==
+the ontology must name: cn:Person, cn:hipaaTraining
+answer:
+  Emma Clarke
+
+== rule: HIPAA training rule, and who decided it (data/shapes/hipaa-training-rule.ttl) ==
+rule:  Anyone who leads or reviews a healthcare engagement must finish HIPAA training.
+owner: CloudNova compliance team
+why:   They can see patient data, and US law (HIPAA) expects training first.
+since: 2026-10-31
+flags: Emma Clarke
+✓ This rule has an owner, a written reason and a date.

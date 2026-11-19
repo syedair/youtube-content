@@ -1,0 +1,8 @@
+{
+  "group": "Carter Family",
+  "members": [
+    {"contact name": "Nana", "phone": "+1 416 555 0101"},
+    {"contact name": "Dad", "phone": "+1 416 555 0102"},
+    {"contact name": "Maya", "phone": "+1 416 555 0103"}
+  ]
+}

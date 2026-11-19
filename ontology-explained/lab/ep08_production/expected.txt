@@ -1,0 +1,30 @@
+== ontology CI: the checks a pipeline runs on every change ==
+ontology CI: SHACL ✓  competency queries 4/4 ✓
+✓ Passed: the data fits every shape, and all four questions get answers.
+
+== version diff: family-v1.ttl -> family-v2.ttl ==
+- fam:birthDate rdfs:range xsd:string
++ fam:birthDate rdfs:range xsd:date
++ fam:birthName a owl:DatatypeProperty
++ fam:birthName rdfs:domain fam:Person
++ fam:hasAncestor a owl:TransitiveProperty
++ fam:marriedTo a owl:SymmetricProperty
+→ Six changes in meaning: one fact removed, five added.
+
+== provenance: one named graph per source ==
+fam:david-carter a fam:Person  ← source: david-tree.csv
+fam:david-carter fam:hasChild fam:leo-carter  ← source: david-tree.csv
+fam:maya-carter fam:hasChild fam:amy-carter  ← source: maya-photos.csv
+fam:rose-carter a fam:Person  ← source: david-tree.csv
+fam:rose-carter fam:birthDate "1931-04-03"^^xsd:date  ← source: david-tree.csv
+fam:rose-carter fam:birthName "Rose Lee"  ← source: census-1951.csv
+fam:rose-carter fam:birthName "Rose Lee"  ← source: david-tree.csv
+fam:rose-carter fam:bornIn fam:toronto  ← source: david-tree.csv
+fam:rose-carter fam:hasChild fam:david-carter  ← source: david-tree.csv
+fam:rose-carter fam:hasChild fam:maya-carter  ← source: maya-photos.csv
+fam:rose-carter fam:name "Rose Carter"  ← source: david-tree.csv
+fam:rose-carter fam:name "Rose Carter"  ← source: maya-photos.csv
+
+== taxonomy: kind-of and nothing else (skos-services.ttl) ==
+cn:cirrus-ai is a kind of cn:ai-services  (prefLabel "Cirrus AI"@en; altLabel "CAI"@en, "Cirrus Intelligence"@en)
+→ Three names, one service: Cirrus AI is a kind of AI services.

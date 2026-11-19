@@ -1,0 +1,9 @@
+Statement of Work 17, summary. CloudNova Inc. and Acme Health.
+
+Scope: CloudNova builds the Cirrus AI claims assistant, engagement "Claims AI", for
+Acme Health. It helps Acme Health's claims staff work through insurance claims.
+
+Staffing: Emma Clarke will lead the engagement. Daniel Brooks will act as reviewer.
+
+Start: 2026, period 13, day 1 (P13 D1) of the Acme Health fiscal calendar.
+Patient data stays in the customer's account.

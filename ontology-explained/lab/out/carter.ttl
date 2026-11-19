@@ -1,0 +1,6 @@
+@prefix fam: <https://family.example/id/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+fam:rose-carter a fam:Person ; fam:name "Rose Carter" ; fam:birthName "Rose Lee" ; fam:bornIn fam:toronto ; fam:birthDate "1931-04-03"^^xsd:date ; fam:hasChild fam:david-carter , fam:maya-carter .
+fam:david-carter a fam:Person ; fam:hasChild fam:leo-carter .
+fam:maya-carter fam:hasChild fam:amy-carter .

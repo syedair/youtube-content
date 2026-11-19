@@ -1,0 +1,4 @@
+subject,predicate,object
+rose-carter,name,Rose Carter
+rose-carter,hasChild,maya-carter
+maya-carter,hasChild,amy-carter

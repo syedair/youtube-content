@@ -1,0 +1,46 @@
+# Competency questions: the questions the ontology must be able to answer.
+# Written first, before any modelling. One block per question: a "# CQn: ..." line, then its query.
+# Episodes 8 and 9 both read this file.
+
+# CQ1: Which employees worked on Cirrus AI engagements for healthcare customers?
+PREFIX cn:   <https://data.cloudnova.example/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?answer
+WHERE { ?e a cn:Engagement ;
+           cn:forCustomer ?c ;
+           cn:uses ?p .
+        ?c cn:industry "healthcare" .
+        ?p rdfs:label "Cirrus AI" .
+        { ?e cn:hasLead ?who } UNION { ?e cn:hasReviewer ?who }
+        ?who rdfs:label ?answer . }
+ORDER BY ?answer
+
+# CQ2: Which engagements have no lead?
+PREFIX cn:   <https://data.cloudnova.example/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT ?answer
+WHERE { ?e a cn:Engagement ;
+           rdfs:label ?answer .
+        FILTER NOT EXISTS { ?e cn:hasLead ?lead } }
+ORDER BY ?answer
+
+# CQ3: Which lab results lack a valid LOINC code?
+PREFIX cn:   <https://data.cloudnova.example/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT ?answer
+WHERE { ?r a cn:LabResult ;
+           rdfs:label ?name ;
+           cn:forPatient ?patient .
+        ?patient rdfs:label ?pname .
+        FILTER NOT EXISTS { ?r cn:loincCode ?code . FILTER REGEX(STR(?code), "^[0-9]{1,5}-[0-9]$") }
+        BIND(CONCAT(?name, " (", ?pname, ")") AS ?answer) }
+ORDER BY ?answer
+
+# CQ4: Who needs HIPAA training?
+PREFIX cn:   <https://data.cloudnova.example/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT ?answer
+WHERE { ?who a cn:Person ;
+             rdfs:label ?answer ;
+             cn:hipaaTraining "due" . }
+ORDER BY ?answer

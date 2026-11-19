@@ -1,0 +1,19 @@
+@prefix cn:   <https://data.cloudnova.example/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
+# A metric is defined once, here, as a query over the mapped graph. Every dashboard and every AI asks this
+# one definition instead of keeping its own (reports.sql shows the three it replaces).
+cn:activeCustomers a cn:Metric ;
+    rdfs:label "Active customers" ;
+    skos:definition "a signed contract and an open engagement" ;
+    cn:sparql """PREFIX cn:   <https://data.cloudnova.example/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?customer
+WHERE { ?e a cn:Engagement ;
+           cn:forCustomer ?c ;
+           cn:status "open" .
+        ?contract a cn:Contract ;
+                  cn:contractWith ?c .
+        ?c rdfs:label ?customer . }
+ORDER BY ?customer""" .

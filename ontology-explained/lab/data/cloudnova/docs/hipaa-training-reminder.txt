@@ -1,0 +1,11 @@
+Subject: Action needed: your HIPAA training is due
+From: CloudNova compliance team
+To: Emma Clarke
+Date: 2026-10-31
+
+Hi Emma, from today anyone who leads or reviews a healthcare engagement must
+finish HIPAA training. They can see patient data, and US law (HIPAA) expects
+training first.
+
+Our records show your HIPAA training is due. Please finish it before you work
+with patient data on Claims AI.

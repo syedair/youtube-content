@@ -1,0 +1,28 @@
+{
+  "entities": {
+    "Q172": {
+      "id": "Q172",
+      "labels": {
+        "en": {
+          "language": "en",
+          "value": "Toronto"
+        }
+      },
+      "claims": {
+        "P17": [
+          {
+            "mainsnak": {
+              "property": "P17",
+              "datavalue": {
+                "value": {
+                  "id": "Q16"
+                }
+              }
+            },
+            "rank": "normal"
+          }
+        ]
+      }
+    }
+  }
+}

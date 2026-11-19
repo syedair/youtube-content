@@ -1,0 +1,63 @@
+== map: CloudNova tables to a graph (mapping.rml.ttl) ==
+mapped triples: 53
+cn:claims-ai cn:forCustomer cn:acme-health
+cn:fraud-watch cn:forCustomer cn:initech
+cn:lakehouse cn:forCustomer cn:globex-bank
+cn:patient-360 cn:forCustomer cn:acme-health
+
+== semantic layer: Active customers, three reports, one definition (metrics.ttl) ==
+each report counts its own way (reports.sql):
+  sales dashboard: billed in the last 90 days                 1  Acme Health
+  consulting team sheet: has an open engagement               3  Acme Health, Globex Bank, Initech
+  finance report: has a signed contract                       2  Acme Health, Globex Bank
+one definition, for every report (metrics.ttl):
+  active customers: a signed contract and an open engagement  2  Acme Health, Globex Bank
+✓ Three reports said 1, 3 and 2; one definition says 2.
+
+== api: Wikidata resolves fam:toronto (Special:EntityData/Q172.json) ==
+fam:toronto → wd:Q172 Toronto, Canada (from Wikidata)
+fam:toronto owl:sameAs wd:Q172
+fam:toronto rdfs:label "Toronto"
+fam:toronto wdt:P17 wd:Q16
+✓ Linked: our Toronto is Wikidata's Toronto, Canada (Q172).
+
+== pdf: the contract page, read with pypdf ==
+source: sow-17.pdf
+STATEMENT OF WORK 17
+CloudNova Inc. and Acme Health
+Page 3 of 5. Scope and staffing
+Emma Clarke will lead the Cirrus AI claims assistant (engagement "Claims AI") for
+Acme Health, starting 2026, period 13, day 1 (P13 D1) of the Acme Health fiscal
+calendar. Daniel Brooks will act as reviewer. Patient data stays in the
+customer's account.
+→ The PDF page is now seven lines of plain text for the LLM.
+
+== the LLM reads sow-17.pdf and writes triples ==
+```
+@prefix cn: <https://data.cloudnova.example/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+cn:claims-ai a cn:Engagement ;
+  cn:hasLead cn:emma ;
+  cn:hasReviewer cn:daniel ;
+  cn:uses cn:cirrus-ai ;
+  cn:forCustomer cn:acme-health ;
+  cn:startDate "2026-13-01"^^xsd:date .
+```
+→ The LLM wrote six triples. Nothing has checked them yet.
+
+== SHACL gate on the LLM's triples ==
+REJECTED cn:claims-ai cn:startDate "2026-13-01" -> sh:datatype xsd:date: startDate must be an xsd:date such as 2026-03-01
+accepted: 5 of 6 triples
+quarantined: 1
+✗ REJECTED: "2026-13-01" is not a real date. 5 of 6 triples kept.
+
+== match: Acme's names against our customers (acme-names.csv) ==
+5 names x 3 customers = 15 pairs; blocking keeps 5 (same first word)
+1.00  ACME Health          SOW PDF           match: Acme Health
+0.90  ACME-HLTH            billing           match: Acme Health
+0.85  Acme Health Inc.     CRM               match: Acme Health
+0.53  Acme                 consulting sheet  review queue
+0.53  Acme Hospital Group  news              review queue
+rule: 0.80 or more is a match; below that, a person decides
+→ Three names matched Acme Health; two go to a person to review.

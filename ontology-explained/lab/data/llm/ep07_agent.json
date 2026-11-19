@@ -1,0 +1,21 @@
+[
+  {
+    "content": "",
+    "tool_calls": [
+      {
+        "id": "call_sb2vlwlh",
+        "name": "people_on_projects",
+        "arguments": "{\"product\":\"Cirrus AI\",\"industry\":\"healthcare\"}"
+      },
+      {
+        "id": "call_8nphik28",
+        "name": "hipaa_training",
+        "arguments": "{}"
+      }
+    ]
+  },
+  {
+    "content": "Based on the tool call responses, I can answer your question as follows:\n\nEmma Clarke, a Consultant, led the project to build Cirrus AI solutions for healthcare customers, specifically the Claims AI for Acme Health project. Daniel Brooks, the Chief Architect, reviewed the project.\n\nAs for who still needs HIPAA training, the response indicates that Emma Clarke needs to complete her HIPAA training.",
+    "tool_calls": []
+  }
+]

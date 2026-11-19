@@ -1,0 +1,69 @@
+== the question ==
+Which employees built Cirrus AI solutions for healthcare customers, and who still needs HIPAA training?
+→ A question about our own company's data, not the public web.
+
+== sparql: retrieve the facts from the graph ==
+PREFIX cn:   <https://data.cloudnova.example/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT ?name ?relation ?engagement ?customer ?product ?training
+WHERE { ?e a cn:Engagement ;
+           cn:forCustomer ?c ;
+           cn:uses ?p ;
+           rdfs:label ?engagement .
+        ?c cn:industry "healthcare" ; rdfs:label ?customer .
+        ?p rdfs:label "Cirrus AI" , ?product .
+        { ?e cn:hasLead ?who . BIND("lead" AS ?relation) }
+        UNION
+        { ?e cn:hasReviewer ?who . BIND("reviewer" AS ?relation) }
+        ?who rdfs:label ?name ;
+             cn:hipaaTraining ?training . }
+ORDER BY ?relation ?name
+
+== retrieved facts ==
+Emma Clarke — lead, Claims AI (Acme Health, Cirrus AI) — HIPAA training: due
+Daniel Brooks — reviewer, Claims AI (Acme Health, Cirrus AI) — HIPAA training: done
+→ From the graph: Emma and Daniel worked on it; Emma's training is due.
+
+== WITHOUT THE GRAPH ==
+I can’t answer that. I can help you with general information about HIPAA training.
+→ No context: the model cannot answer.
+
+== WITH SEARCH OVER DOCUMENTS ==
+Five documents in data/cloudnova/docs, cut into 16 chunks (one per paragraph).
+Keyword search (BM25) for the question; the top three:
+  1. hipaa-training-reminder.txt  score 5.3  "Hi Emma, from today anyone who leads or ..."
+  2. hipaa-training-reminder.txt  score 4.3  "Our records show your HIPAA training is due. ..."
+  3. acme-health-account-note.txt  score 4.0  "Open engagements: Claims AI, a claims assistant on ..."
+The model's answer, from those chunks only:
+Unfortunately, the provided documents do not answer the question about which employees built Cirrus AI solutions for healthcare customers. They only mention that Emma needs to finish HIPAA training before working with patient data on Claims AI.
+
+However, the documents do mention that Emma needs to finish HIPAA training, which implies that she is involved in working with patient data on Claims AI.
+→ Search found three similar chunks; it gets Emma's training, not who built it.
+
+== WITH THE GRAPH ==
+According to the facts, Emma Clarke built Cirrus AI solutions for healthcare customers, as she is the lead of Claims AI (Acme Health, Cirrus AI).
+
+Emma Clarke also still needs HIPAA training, as stated in the fact: "Emma Clarke — lead, Claims AI (Acme Health, Cirrus AI) — HIPAA training: due".
+→ With the facts, it names Emma.
+
+== agent: the model calls the graph as tools, through MCP ==
+MCP server: ep07_context_for_ai/graph_mcp.py, started over stdio
+tools it offers:
+  people_on_projects(product, industry)
+    Who worked on Cloudnova projects that use a product, for customers in an industry: name, job title, role.
+  hipaa_training()
+    The HIPAA training status of every person at Cloudnova, from the HR records: done, or due (still needs it).
+question: Which employees built Cirrus AI solutions for healthcare customers, and who still needs HIPAA training?
+model asks (turn 1): people_on_projects(product="Cirrus AI", industry="healthcare")
+graph says:          Emma Clarke (Consultant): lead on Claims AI for Acme Health
+                     Daniel Brooks (Chief Architect): reviewer on Claims AI for Acme Health
+model asks (turn 1): hipaa_training()
+graph says:          Daniel Brooks: HIPAA training done
+                     Emma Clarke: HIPAA training due
+model answers (turn 2):
+Based on the tool call responses, I can answer your question as follows:
+
+Emma Clarke, a Consultant, led the project to build Cirrus AI solutions for healthcare customers, specifically the Claims AI for Acme Health project. Daniel Brooks, the Chief Architect, reviewed the project.
+
+As for who still needs HIPAA training, the response indicates that Emma Clarke needs to complete her HIPAA training.
+→ Two tool calls through MCP; the answer names Emma and Daniel.

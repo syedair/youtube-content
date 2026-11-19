@@ -1,0 +1,18 @@
+@prefix cn:  <https://data.cloudnova.example/> .
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# What a trustworthy engagement looks like, whoever wrote it down (a table or an LLM).
+cn:EngagementShape a sh:NodeShape ;
+    sh:targetClass cn:Engagement ;
+    sh:property [
+        sh:path cn:startDate ;
+        sh:datatype xsd:date ;
+        sh:maxCount 1 ;
+        sh:message "startDate must be an xsd:date such as 2026-03-01"
+    ] ;
+    sh:property [
+        sh:path cn:hasLead ;
+        sh:class cn:Person ;
+        sh:message "hasLead must be a Person"
+    ] .
