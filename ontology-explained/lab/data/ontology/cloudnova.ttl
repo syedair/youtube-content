@@ -1,0 +1,21 @@
+@prefix cn:   <https://data.cloudnova.example/> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+# A slice of the Cloudnova ontology (episode 3): the class tree, one relationship, one "never".
+
+# The class tree. Agent at the top: people on one side, organizations on the other.
+cn:Person             rdfs:subClassOf cn:Agent .
+cn:Employee           rdfs:subClassOf cn:Person .
+cn:Consultant         rdfs:subClassOf cn:Employee .
+cn:ChiefArchitect     rdfs:subClassOf cn:Employee .
+cn:Organization       rdfs:subClassOf cn:Agent .
+cn:Customer           rdfs:subClassOf cn:Organization .
+cn:HealthcareCustomer rdfs:subClassOf cn:Customer .
+
+# Whoever works on something is an Employee; whatever they work on is an Engagement.
+cn:worksOn rdfs:domain cn:Employee ;
+           rdfs:range  cn:Engagement .
+
+# OWL: nothing is both a Person and an Organization.
+cn:Person owl:disjointWith cn:Organization .

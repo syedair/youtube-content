@@ -1,0 +1,70 @@
+Two family files. Both call her fam:rose-carter.
+
+david-tree.csv:   8 facts
+maya-photos.csv:  3 facts
+
+== merge: just add the facts together ==
+fam:rose-carter children: fam:david-carter, fam:maya-carter
+distinct Rose nodes after merge: 1
+merged graph: 10 triples
+✓ One Rose, not two: both files' facts now sit on one node.
+
+excerpt: Rose and David, 9 of the 10 triples
+
+== turtle ==
+@prefix fam: <https://family.example/id/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+fam:rose-carter a fam:Person ; fam:name "Rose Carter" ; fam:birthName "Rose Lee" ; fam:bornIn fam:toronto ; fam:birthDate "1931-04-03"^^xsd:date ; fam:hasChild fam:david-carter , fam:maya-carter .
+fam:david-carter a fam:Person ; fam:hasChild fam:leo-carter .
+
+== n-triples ==
+<https://family.example/id/david-carter> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://family.example/id/Person> .
+<https://family.example/id/david-carter> <https://family.example/id/hasChild> <https://family.example/id/leo-carter> .
+<https://family.example/id/rose-carter> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://family.example/id/Person> .
+<https://family.example/id/rose-carter> <https://family.example/id/birthDate> "1931-04-03"^^<http://www.w3.org/2001/XMLSchema#date> .
+<https://family.example/id/rose-carter> <https://family.example/id/birthName> "Rose Lee" .
+<https://family.example/id/rose-carter> <https://family.example/id/bornIn> <https://family.example/id/toronto> .
+<https://family.example/id/rose-carter> <https://family.example/id/hasChild> <https://family.example/id/david-carter> .
+<https://family.example/id/rose-carter> <https://family.example/id/hasChild> <https://family.example/id/maya-carter> .
+<https://family.example/id/rose-carter> <https://family.example/id/name> "Rose Carter" .
+
+== json-ld ==
+{
+  "@context": {
+    "fam": "https://family.example/id/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#"
+  },
+  "@graph": [
+    {
+      "@id": "fam:david-carter",
+      "@type": "fam:Person",
+      "fam:hasChild": {
+        "@id": "fam:leo-carter"
+      }
+    },
+    {
+      "@id": "fam:rose-carter",
+      "@type": "fam:Person",
+      "fam:birthDate": {
+        "@type": "xsd:date",
+        "@value": "1931-04-03"
+      },
+      "fam:birthName": "Rose Lee",
+      "fam:bornIn": {
+        "@id": "fam:toronto"
+      },
+      "fam:hasChild": [
+        {
+          "@id": "fam:david-carter"
+        },
+        {
+          "@id": "fam:maya-carter"
+        }
+      ],
+      "fam:name": "Rose Carter"
+    }
+  ]
+}
+
+triple count (all formats): 9
+✓ Same 9 facts, three spellings: each reads back as the same graph.

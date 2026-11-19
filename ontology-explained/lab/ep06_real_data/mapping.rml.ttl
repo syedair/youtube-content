@@ -1,0 +1,37 @@
+@prefix rr:   <http://www.w3.org/ns/r2rml#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix cn:   <https://data.cloudnova.example/> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+# One block per table: each row becomes a node, each column a property.
+
+<#Person> rr:logicalTable [ rr:tableName "person" ] ;
+    rr:subjectMap [ rr:template "https://data.cloudnova.example/{id}" ; rr:class cn:Person ] ;
+    rr:predicateObjectMap [ rr:predicate rdfs:label ;        rr:objectMap [ rr:column "name" ] ] ;
+    rr:predicateObjectMap [ rr:predicate cn:role ;           rr:objectMap [ rr:column "role" ] ] ;
+    rr:predicateObjectMap [ rr:predicate cn:hipaaTraining ;  rr:objectMap [ rr:column "hipaa_training" ] ] .
+
+<#Customer> rr:logicalTable [ rr:tableName "customer" ] ;
+    rr:subjectMap [ rr:template "https://data.cloudnova.example/{id}" ; rr:class cn:Customer ] ;
+    rr:predicateObjectMap [ rr:predicate rdfs:label ;   rr:objectMap [ rr:column "name" ] ] ;
+    rr:predicateObjectMap [ rr:predicate cn:industry ;  rr:objectMap [ rr:column "industry" ] ] .
+
+<#Product> rr:logicalTable [ rr:tableName "product" ] ;
+    rr:subjectMap [ rr:template "https://data.cloudnova.example/{id}" ; rr:class cn:Product ] ;
+    rr:predicateObjectMap [ rr:predicate rdfs:label ;  rr:objectMap [ rr:column "name" ] ] .
+
+# Foreign keys become links between nodes, not strings.
+<#Engagement> rr:logicalTable [ rr:tableName "engagement" ] ;
+    rr:subjectMap [ rr:template "https://data.cloudnova.example/{id}" ; rr:class cn:Engagement ] ;
+    rr:predicateObjectMap [ rr:predicate rdfs:label ;       rr:objectMap [ rr:column "name" ] ] ;
+    rr:predicateObjectMap [ rr:predicate cn:forCustomer ;   rr:objectMap [ rr:template "https://data.cloudnova.example/{customer_id}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate cn:uses ;          rr:objectMap [ rr:template "https://data.cloudnova.example/{product_id}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate cn:hasLead ;       rr:objectMap [ rr:template "https://data.cloudnova.example/{lead_id}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate cn:hasReviewer ;   rr:objectMap [ rr:template "https://data.cloudnova.example/{reviewer_id}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate cn:status ;        rr:objectMap [ rr:column "status" ] ] .
+
+# Contracts: the semantic layer's "Active customers" metric (metrics.ttl) asks for a signed one.
+<#Contract> rr:logicalTable [ rr:tableName "contract" ] ;
+    rr:subjectMap [ rr:template "https://data.cloudnova.example/{id}" ; rr:class cn:Contract ] ;
+    rr:predicateObjectMap [ rr:predicate cn:contractWith ;  rr:objectMap [ rr:template "https://data.cloudnova.example/{customer_id}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate cn:signedOn ;      rr:objectMap [ rr:column "signed_on" ; rr:datatype xsd:date ] ] .

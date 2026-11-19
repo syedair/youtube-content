@@ -1,0 +1,11 @@
+```
+@prefix cn: <https://data.cloudnova.example/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+cn:claims-ai a cn:Engagement ;
+  cn:hasLead cn:emma ;
+  cn:hasReviewer cn:daniel ;
+  cn:uses cn:cirrus-ai ;
+  cn:forCustomer cn:acme-health ;
+  cn:startDate "2026-13-01"^^xsd:date .
+```

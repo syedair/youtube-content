@@ -1,0 +1,33 @@
+One grandma. Five names.
+
+== sources ==
+1951 census          name            "R. Lee"
+Dad's spreadsheet    name            "Rose C."
+Family group chat    contact name    "Nana"
+Her passport         surname, given  "CARTER, ROSE"
+Maya's photo album   caption         "Mom"
+
+== naive join: exact string match on name ==
+exact-match pairs: 0
+✗ The computer finds no match: five names, zero links.
+
+Same person? You know it. The computer doesn't.
+
+== one ID: look up Acme's five names in who-is-who.csv ==
+before the table, exact-match pairs: 0
+CRM               "Acme Health Inc."  → acme-health
+consulting sheet  "Acme"              → acme-health
+billing           "ACME-HLTH"         → acme-health
+SOW PDF           "ACME Health"       → acme-health
+email             "the hospital"      → acme-health
+distinct customers: 1
+✓ Five names, one ID: the computer now sees one customer.
+
+== family ID: the same fix for Grandma's five names ==
+1951 census          "R. Lee"        → rose-carter
+Dad's spreadsheet    "Rose C."       → rose-carter
+Family group chat    "Nana"          → rose-carter
+Her passport         "CARTER, ROSE"  → rose-carter
+Maya's photo album   "Mom"           → rose-carter
+distinct people: 1
+✓ Five names, one ID: the computer now sees one person.

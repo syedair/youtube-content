@@ -1,0 +1,6 @@
+Patient 360, project page. Customer: Acme Health. Status: open.
+
+Patient 360 joins each patient's records from Acme Health's hospitals into one view,
+built on Cirrus Graph.
+
+Team: Daniel Brooks leads the project and owns the design decisions.

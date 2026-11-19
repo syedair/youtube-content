@@ -1,0 +1,28 @@
+{
+  "entities": {
+    "Q16": {
+      "id": "Q16",
+      "labels": {
+        "en": {
+          "language": "en",
+          "value": "Canada"
+        }
+      },
+      "claims": {
+        "P17": [
+          {
+            "mainsnak": {
+              "property": "P17",
+              "datavalue": {
+                "value": {
+                  "id": "Q16"
+                }
+              }
+            },
+            "rank": "normal"
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,27 @@
+@prefix cn:      <https://data.cloudnova.example/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh:      <http://www.w3.org/ns/shacl#> .
+@prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+
+# A business rule is a choice somebody made. So the rule carries who owns it, why it exists and since when,
+# next to the check itself (episode 9 prints these). Change the rule, and you change these lines too.
+cn:HipaaTrainingRule a sh:NodeShape ;
+    rdfs:label "HIPAA training rule" ;
+    skos:definition "Anyone who leads or reviews a healthcare engagement must finish HIPAA training." ;
+    rdfs:comment "They can see patient data, and US law (HIPAA) expects training first." ;
+    dcterms:creator "CloudNova compliance team" ;
+    dcterms:created "2026-10-31"^^xsd:date ;
+    sh:targetClass cn:Person ;
+    sh:sparql [
+        sh:message "works on a healthcare engagement, but HIPAA training is not done" ;
+        sh:select """
+            PREFIX cn: <https://data.cloudnova.example/>
+            SELECT $this WHERE {
+                ?e cn:hasLead|cn:hasReviewer $this ;
+                   cn:forCustomer/cn:industry "healthcare" .
+                $this cn:hipaaTraining ?t .
+                FILTER (?t != "trained")
+            }"""
+    ] .

@@ -1,0 +1,46 @@
+@prefix fam:  <https://family.example/id/> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+# The family ontology: what the words in our data mean.
+
+# Two kinds of thing.
+fam:Person a owl:Class .
+fam:Place  a owl:Class .
+
+# "A has child B" only makes sense between people.
+fam:hasChild a owl:ObjectProperty ;
+    rdfs:domain fam:Person ;
+    rdfs:range  fam:Person ;
+    owl:inverseOf fam:hasParent .          # B hasParent A says the same thing
+
+# A parent is an ancestor too. Together with the line below, this reaches back any number of generations.
+fam:hasParent a owl:ObjectProperty ;
+    rdfs:subPropertyOf fam:hasAncestor .
+
+# Ancestors of ancestors are ancestors.
+fam:hasAncestor a owl:ObjectProperty , owl:TransitiveProperty ;
+    rdfs:domain fam:Person ;
+    rdfs:range  fam:Person .
+
+# If A is married to B, then B is married to A.
+fam:marriedTo a owl:ObjectProperty , owl:SymmetricProperty ;
+    rdfs:domain fam:Person ;
+    rdfs:range  fam:Person .
+
+# Whoever is born somewhere is a person; wherever they are born is a place.
+fam:bornIn a owl:ObjectProperty ;
+    rdfs:domain fam:Person ;
+    rdfs:range  fam:Place .
+
+# Plain facts about a person.
+fam:birthDate a owl:DatatypeProperty ;
+    rdfs:domain fam:Person ;
+    rdfs:range  xsd:date .
+
+fam:name a owl:DatatypeProperty ;
+    rdfs:domain fam:Person .
+
+fam:birthName a owl:DatatypeProperty ;
+    rdfs:domain fam:Person .

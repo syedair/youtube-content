@@ -1,0 +1,4 @@
+@prefix cn: <https://data.cloudnova.example/> .
+cn:globex-bank a cn:Customer .               # as the CRM has it
+cn:daniel      cn:worksOn cn:patient-360 .   # typed in today
+cn:globex-bank cn:worksOn cn:lakehouse .     # typed in today: a typo, they meant Lakehouse is for Globex Bank

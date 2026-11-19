@@ -1,0 +1,12 @@
+@prefix fam: <https://family.example/id/> .
+@prefix sh:  <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# The rule for our data: a person's birth date must be a real date (xsd:date).
+fam:PersonShape a sh:NodeShape ;
+    sh:targetClass fam:Person ;
+    sh:property [
+        sh:path fam:birthDate ;
+        sh:datatype xsd:date ;
+        sh:message "birthDate must be an xsd:date such as 1931-04-03"
+    ] .

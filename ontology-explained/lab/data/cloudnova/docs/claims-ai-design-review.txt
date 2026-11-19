@@ -1,0 +1,10 @@
+Subject: Re: Claims AI design review
+From: Daniel Brooks
+To: Emma Clarke
+
+Emma, I've been through the design. Approved, with two notes: log every draft
+decision the assistant makes, and keep the test claims in Acme's account too.
+
+> From: Emma Clarke
+> Daniel, here is the design for the claims assistant. Can you review it
+> before we start in P13?

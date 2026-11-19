@@ -1,0 +1,7 @@
+Acme Health, account note (CRM).
+
+Acme Health is a hospital group (the news calls it Acme Hospital Group).
+Industry: healthcare. Master services agreement signed 2025-03-14.
+
+Open engagements: Claims AI, a claims assistant on Cirrus AI, and Patient 360,
+one view of each patient on Cirrus Graph.

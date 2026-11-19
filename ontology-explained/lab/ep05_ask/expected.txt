@@ -1,0 +1,16 @@
+== sparql: Rose's grandchildren (ep05_ask/grandchildren.rq) ==
+Rose's grandchildren: Amy, Leo
+→ Rose has two grandchildren: Amy and Leo.
+
+== property graph: Rose and Tom's marriage (data/carter/marriage.csv) ==
+RDF triple:      fam:rose-carter fam:marriedTo fam:tom-carter .
+property graph:  (rose-carter)-[:MARRIED_TO {since: 1952, place: "Toronto", source: "marriage certificate"}]->(tom-carter)
+RDF 1.2 notes:   fam:rose-carter fam:marriedTo fam:tom-carter {| fam:since 1952 ; fam:place "Toronto" ; fam:source "marriage certificate" |} .
+→ One link, three details: on the edge, or as RDF 1.2 notes.
+
+== graph algorithms on CloudNova ==
+nodes: 12, edges: 12
+most central: Daniel Brooks
+shortest path Emma Clarke → Globex Bank: Emma Clarke → Claims AI → Daniel Brooks → Lakehouse → Globex Bank
+→ Daniel Brooks sits on the most paths; Emma is four hops from Globex Bank.
+

@@ -1,0 +1,29 @@
+Written down: 10 facts. Plus the ontology's rules.
+
+== inferred by RDFS (nobody wrote these) ==
+fam:amy-carter a fam:Person (inferred from range)
+fam:leo-carter a fam:Person (inferred from range)
+fam:maya-carter a fam:Person (inferred from range and domain)
+fam:toronto a fam:Place (inferred from range)
+
+inferred facts: 4
+
+== trap: RDFS reads the typed facts (ep03_meaning/works-on.ttl) ==
+rule: cn:worksOn domain cn:Employee, range cn:Engagement
+cn:daniel a cn:Employee (inferred from domain)
+cn:globex-bank a cn:Employee (inferred from domain)
+cn:lakehouse a cn:Engagement (inferred from range)
+cn:patient-360 a cn:Engagement (inferred from range)
+errors: 0
+✗ No error, no warning: RDFS made Globex Bank an Employee.
+
+== clash: OWL adds cn:Person disjointWith cn:Organization ==
+why cn:globex-bank is a Person:
+  cn:globex-bank cn:worksOn cn:lakehouse  => a cn:Employee (domain)
+  cn:Employee subClassOf cn:Person        => a cn:Person
+why cn:globex-bank is an Organization:
+  cn:globex-bank a cn:Customer            (written down)
+  cn:Customer subClassOf cn:Organization  => a cn:Organization
+reasoner: Disjoint classes cn:Person and cn:Organization have a common individual cn:globex-bank
+✗ CONTRADICTION: Globex Bank can't be a Person and an Organization.
+

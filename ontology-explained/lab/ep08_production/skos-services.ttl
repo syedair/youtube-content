@@ -1,0 +1,41 @@
+@prefix cn:   <https://data.cloudnova.example/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
+# A taxonomy: a tree of "kind of", nothing more. It groups CloudNova's services
+# so people can browse and search. It does not say what a service is or does.
+cn:services a skos:ConceptScheme ;
+    skos:prefLabel "CloudNova services"@en .
+
+cn:all-services a skos:Concept ;
+    skos:inScheme cn:services ;
+    skos:prefLabel "Services"@en ;
+    skos:narrower cn:ai-services , cn:data-services .
+
+cn:ai-services a skos:Concept ;
+    skos:inScheme cn:services ;
+    skos:prefLabel "AI services"@en ;
+    skos:broader cn:all-services ;
+    skos:narrower cn:cirrus-ai .
+
+cn:data-services a skos:Concept ;
+    skos:inScheme cn:services ;
+    skos:prefLabel "Data services"@en ;
+    skos:broader cn:all-services ;
+    skos:narrower cn:cirrus-sql , cn:cirrus-graph .
+
+cn:cirrus-sql a skos:Concept ;
+    skos:inScheme cn:services ;
+    skos:prefLabel "Cirrus SQL"@en ;
+    skos:altLabel "Cirrus Warehouse"@en ;
+    skos:broader cn:data-services .
+
+cn:cirrus-graph a skos:Concept ;
+    skos:inScheme cn:services ;
+    skos:prefLabel "Cirrus Graph"@en ;
+    skos:broader cn:data-services .
+
+cn:cirrus-ai a skos:Concept ;
+    skos:inScheme cn:services ;
+    skos:prefLabel "Cirrus AI"@en ;
+    skos:altLabel "Cirrus Intelligence"@en , "CAI"@en ;
+    skos:broader cn:ai-services .

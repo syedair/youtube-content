@@ -1,0 +1,3 @@
+According to the facts, Emma Clarke built Cirrus AI solutions for healthcare customers, as she is the lead of Claims AI (Acme Health, Cirrus AI).
+
+Emma Clarke also still needs HIPAA training, as stated in the fact: "Emma Clarke — lead, Claims AI (Acme Health, Cirrus AI) — HIPAA training: due".

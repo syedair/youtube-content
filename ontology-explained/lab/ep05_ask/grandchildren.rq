@@ -1,0 +1,4 @@
+PREFIX fam: <https://family.example/id/>
+SELECT ?gc
+WHERE { fam:rose-carter fam:hasChild ?child .
+        ?child fam:hasChild ?gc . }
